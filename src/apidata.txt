@@ -1,0 +1,116 @@
+this is just the api data put on a larger screen
+{"time":{"updated":"May 21, 2023 04:12:00 UTC",
+
+"updatedISO":"2023-05-21T04:12:00+00:00",
+
+"updateduk":"May 21, 2023 at 05:12 BST"},
+
+"disclaimer":"This data was produced from the CoinDesk Bitcoin Price Index (USD). 
+Non-USD currency data converted using hourly conversion rate from openexchangerates.org",
+
+"chartName":"Bitcoin",
+( all of the inside is one thing (BPI is the data)
+"bpi":{"USD":{"code":"USD","symbol":"&#36;","rate":"27,177.7147","description":"United States Dollar","rate_float":27177.7147},
+"GBP":{"code":"GBP","symbol":"&pound;","rate":"22,709.4810","description":"British Pound Sterling","rate_float":22709.481},
+"EUR":{"code":"EUR","symbol":"&euro;","rate":"26,475.0621","description":"Euro","rate_float":26475.0621}}}
+)
+
+adam code
+
+
+
+==============================
+my code
+import "./App.css";
+import Time from "./components/Time.jsx";
+import Converter from "./components/Converter";
+import { useState } from "react";
+import { useEffect } from "react";
+import CurRates from "./components/curRates";
+import axios from "axios";
+
+function App() {
+  const [pages, setPages] = useState("rates");
+  const [currency, setCurrency] = useState({});
+  const [load, setLoad] = useState(false);
+  const [time, setTime] = useState(null);
+  const [fetch, setFetch] = useState(null);
+
+  const fetchAPIData = async () => {
+    const URL = "https://api.coindesk.com/v1/bpi/currentprice.json";
+    const {
+      data: { bpi },
+    } = await axios.get(URL); //Returns API promise
+    setCurType(bpi);
+    console.log(bpi);
+
+    //Make array of bpi values. uses reduce to reduce the keys to rate_float
+    const bpiData = Object.keys(bpi).reduce((acc, currentVal) => {
+      //acc is the array and currentVal is the index of the array
+      //currentVal will either be USD,EUR or GBP
+      acc[currentVal] = bpi[currentVal].rate_float;
+
+      return acc;
+    }, {});
+
+    setCurType(bpiData);
+  };
+  useEffect(() => {
+    fetchAPIData();
+  }, []);
+
+  // const convertPage = () => {
+  //   setPages("converter");
+  // };
+  // const ratePage = () => {
+  //   setPages("rates");
+  // };
+
+  return (
+    <>
+      <div>
+        <CurRates />
+        <Time />;{/* <Converter cur={fetchAPIData}></Converter> */}
+      </div>
+    </>
+  );
+}
+
+/* in converter
+          bpiData={fetchBPIData}
+          currency={currency}
+          setCurrency={setCurrency}
+          loading={setLoad} */
+
+export default App;
+
+/*
+const fetchAPIData = async () => {
+    const URL = "https://api.coindesk.com/v1/bpi/currentprice.json";
+    const {
+      data: { bpi },
+    } = await axios.get(URL); //gives back API data for BPI
+
+    //Make array of bpi values. uses reduce to reduce the keys to rate_float
+    const bpiData = Object.keys(bpi).reduce((acc, currentVal) => {
+      //acc is the array and currentVal is the index of the array
+      //currentVal will either be USD,EUR or GBP
+      acc[currentVal] = bpi[currentVal].rate_float;
+
+      return acc;
+    }, {});
+
+    setCurrency(bpiData);
+  };
+
+  useEffect(() => {
+    fetchAPIData();
+  }, []);
+*/
+
+{/* <div>
+        <p>1 BTC is {load && 1 / cur.USD}</p>
+        <p>1 BTC is {load && 1 / cur.EUR}</p>
+        <p>1 BTC is {load && 1 / cur.GBP}</p>
+      </div> */}
+    
