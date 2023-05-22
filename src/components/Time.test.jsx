@@ -1,5 +1,5 @@
-import { describe, it, expect, test, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, expect, test, beforeEach } from "vitest";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import Time from "./Time";
 import React from "react";
@@ -7,7 +7,7 @@ import React from "react";
 describe("Time is rendered!"),
   () => {
     beforeEach(() => {
-      render(<Time />);
+      render(<Time></Time>);
     });
 
     test("Last updated is rendered", () => {
@@ -20,9 +20,7 @@ describe("Time is rendered!"),
     test("Local Time is rendered", () => {
       const content = screen.getBytestId("local");
 
-      expect(content).toHaveTextContent("Last Updated"); // Should just check if
-      //- Last Updated renders
+      expect(content).toHaveTextContent("Local Time"); // Should just check if
+      //- Local time renders
     });
-
-    test();
   };
